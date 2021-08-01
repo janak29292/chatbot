@@ -19,33 +19,34 @@ class State(models.Model):
 
 
 class Option(models.Model):
-    name = models.CharField(max_length=256)
+    value = models.CharField(max_length=256)
 
     def __str__(self):
-        return self.name
+        return self.value
 
 
 class Response(models.Model):
-    name = models.CharField(max_length=256)
-    opions = models.ManyToManyField(Option)
+    description = models.CharField(max_length=256)
+    options = models.ManyToManyField(Option, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.description
 
 
 class Query(models.Model):
+    intent = models.ForeignKey(Intent, on_delete=models.CASCADE)
+    state = models.ForeignKey(State, on_delete=models.CASCADE, related_name='paths')
     query = models.ForeignKey(
         Response, null=True, blank=True,
         on_delete=models.CASCADE, related_name='responses'
     )
-    state = models.ForeignKey(State, on_delete=models.CASCADE, related_name='paths')
-    option = models.ForeignKey(Option, on_delete=models.CASCADE)
+    option = models.ForeignKey(Option, null=True, blank=True, on_delete=models.CASCADE)
     response = models.ForeignKey(Response, on_delete=models.CASCADE, related_name='queries')
 
     def __str__(self):
-        return f'{self.state.name}: {self.query.name} -> {self.option.name}'
+        return self.response.description
 
     class Meta:
         unique_together = (
-            ('query', 'state', 'option'),
+            ('intent', 'query', 'state', 'option'),
         )
