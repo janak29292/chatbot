@@ -5,6 +5,8 @@
 
 
 ```bash
+git clone https://github.com/janak29292/chatbot.git
+cd chatbot
 virtualenv venv -p python3
 source venv/bin/activate
 pip install -r requirements.txt
