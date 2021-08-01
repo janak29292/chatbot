@@ -34,8 +34,11 @@ class Response(models.Model):
 
 
 class Query(models.Model):
-    query = models.ForeignKey(Response, on_delete=models.CASCADE, related_name='responses')
-    state = models.ForeignKey(State, on_delete=models.CASCADE)
+    query = models.ForeignKey(
+        Response, null=True, blank=True,
+        on_delete=models.CASCADE, related_name='responses'
+    )
+    state = models.ForeignKey(State, on_delete=models.CASCADE, related_name='paths')
     option = models.ForeignKey(Option, on_delete=models.CASCADE)
     response = models.ForeignKey(Response, on_delete=models.CASCADE, related_name='queries')
 
